@@ -6,16 +6,19 @@
     "applications": [
         {
             "name": "Datalign",
+            "version": "0.0.2",
             "targetSdk": "1.1",
             "rootDir": "/sc/sem"
         },
         {
             "name": "Vickrey Auction",
+            "version": "0.0.1",
             "rootDir": "lib",
             "index": "vickrey.ssc.ts"
         },
         {
             "name": "Amlytic",
+            "version": "0.1.0",
             "branch": "master"
         }
     ]
