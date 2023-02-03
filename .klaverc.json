@@ -7,11 +7,12 @@
         {
             "name": "Datalign",
             "targetSdk": "1.1",
-            "root": "/sc/sem"
+            "rootDir": "/sc/sem"
         },
         {
             "name": "Vickrey Auction",
-            "root": "lib/vickrey.ssc.ts"
+            "rootDir": "lib",
+            "index": "vickrey.ssc.ts"
         },
         {
             "name": "Amlytic",
