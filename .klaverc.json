@@ -6,15 +6,18 @@
     "applications": [
         {
             "name": "Datalign",
+            "version": "0.0.1",
             "targetSdk": "1.1",
-            "root": "/sc/sem"
+            "rootDir": "/sc/sem"
         },
         {
             "name": "Semaphore",
-            "root": "lib/different.ssc"
+            "version": "0.0.1",
+            "rootDir": "lib/different.ssc"
         },
         {
             "name": "Amlytic",
+            "version": "0.0.1",
             "branch": "master"
         }
     ]
