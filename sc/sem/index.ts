@@ -3,7 +3,7 @@
 @external("env", "add_user_query")
     declare function add_user_query(s: ArrayBuffer): void;
 @external("env", "add_user_transaction")
-    declare function add_user_transaction(s: ArrayBuffer): void; 
+    declare function add_user_transaction(s: ArrayBuffer): void;
 
 export function register_routes(): void {
     add_user_query(String.UTF8.encode("my_query", true));
