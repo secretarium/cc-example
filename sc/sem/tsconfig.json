@@ -1,0 +1,9 @@
+{
+    "extends": "assemblyscript/std/assembly.json",
+    "compilerOptions": {
+        "forceConsistentCasingInFileNames": true
+    },
+    "include": [
+        "./**/*.ts"
+    ]
+}
