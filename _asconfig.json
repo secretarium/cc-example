@@ -1,0 +1,10 @@
+{
+    "options": {
+        "bindings": "esm",
+        "disable": "bulk-memory",
+        "exportRuntime": true,
+        "transform": [
+            "json-as/transform"
+        ]
+    }
+}
