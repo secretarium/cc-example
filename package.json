@@ -9,7 +9,7 @@
     "build": "stac ."
   },
   "devDependencies": {
-    "@secretarium/trustless-app": "0.3.2",
-    "assemblyscript": "^0.19.3"
+    "@klave/sdk": "0.4.5",
+    "assemblyscript": "^0.27.5"
   }
 }

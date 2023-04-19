@@ -1,10 +1,11 @@
-import { Router, Ledger, Notifier } from '@secretarium/trustless-app';
+import { Router, Ledger, Notifier } from '@klave/sdk';
 
-export function register_routes(): void {
-    Router.addQuery(String.UTF8.encode("fetchValue", true));
-    Router.addTransaction(String.UTF8.encode("storeValue", true));
-}
+// export function register_routes(): void {
+//     Router.addQuery(String.UTF8.encode("fetchValue", true));
+//     Router.addTransaction(String.UTF8.encode("storeValue", true));
+// }
 
+/** @query */
 export function fetchValue(arg: i32): void {
     let k = ptr2string(arg);
     let v = readLedger("my_table", k);
@@ -14,6 +15,20 @@ export function fetchValue(arg: i32): void {
         Notifier.notify(String.UTF8.encode("{\"success\": \"ok\",\"" + k + "\": \"" + v + "\" }", true));
 }
 
+/** @klave query */
+export function fetchTo(arg: i32): void {
+    let k = ptr2string(arg);
+    let v = readLedger("my_table", k);
+    if (v.length == 0)
+        Notifier.notify(String.UTF8.encode("{\"success\": false,\"message\": \"" + "key '" + k + "' not found in table \" }", true));
+    else
+        Notifier.notify(String.UTF8.encode("{\"success\": \"ok\",\"" + k + "\": \"" + v + "\" }", true));
+}
+
+/**
+ * @transaction
+ * @param arg - a pointer to a null-terminated c string located in linear memory
+ */
 export function storeValue(arg: i32): void {
     const s = ptr2string(arg);
     const params = s.split('=');
@@ -29,7 +44,7 @@ export function storeValue(arg: i32): void {
 function readLedger(table: string, key: string): string {
     let t = String.UTF8.encode(table, true);
     let k = String.UTF8.encode(key, true);
-    let value = new ArrayBuffer(64);
+    let value = new ArrayBuffer(64);  
     let result = Ledger.readFromTableIntoBuffer(t, k, value);
     if (result < 0)
         return ""; // todo : report error (or not found ?)
@@ -38,16 +53,18 @@ function readLedger(table: string, key: string): string {
         value = new ArrayBuffer(result);
         result = Ledger.readFromTableIntoBuffer(t, k, value);
         if (result < 0)
-            return ""; // todo : report error
+            return ""; // todo : report errors
     }
     return String.UTF8.decode(value, true);
+    // DFL PLOP    LK
 }
 
 function writeLedger(table: string, key: string, value: string): i32 {
     let t = String.UTF8.encode(table, true);
     let k = String.UTF8.encode(key, true);
     let v = String.UTF8.encode(value, true);
-    return Ledger.writeToTable(t, k, v);
+    return Ledger.writeToTable(t, k, v);      
+    // PLOP
 }
 
 // assumes ptr is a pointer to a null-terminated c string located in linear memory
