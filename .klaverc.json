@@ -5,7 +5,7 @@
     "targetSdk": "1.0",
     "applications": [
         {
-            "name": "Datalign",
+            "name": "HOC Stress",
             "version": "0.0.3",
             "targetSdk": "1.1",
             "rootDir": "/sc/sem"
@@ -17,7 +17,7 @@
             "index": "vickrey.ssc.ts"
         },
         {
-            "name": "Amlytic",
+            "name": "AI BLAST Alignement",
             "version": "0.1.0",
             "branch": "master"
         }
