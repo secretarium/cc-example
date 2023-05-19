@@ -9,6 +9,14 @@
             "version": "0.0.3",
             "targetSdk": "1.1",
             "rootDir": "/sc/sem"
+        }
+    ],
+    "applications_": [
+        {
+            "name": "HOC Stress",
+            "version": "0.0.3",
+            "targetSdk": "1.1",
+            "rootDir": "/sc/sem"
         },
         {
             "name": "Vickrey Auction",

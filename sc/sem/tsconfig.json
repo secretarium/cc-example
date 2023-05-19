@@ -1,7 +1,8 @@
 {
     "extends": "../../node_modules/@klave/sdk/sdk.json",
     "compilerOptions": {
-        "forceConsistentCasingInFileNames": true
+        "forceConsistentCasingInFileNames": true,
+        "experimentalDecorators": true
     },
     "include": [
         "./**/*.ts"
