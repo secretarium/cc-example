@@ -1,51 +1,64 @@
-import { Notifier, Ledger, ptr2string, JSON } from '@klave/sdk';
-// import { readLedger, writeLedger, ptr2string } from './utils';
+import { Notifier, Ledger, Context, JSON } from '@klave/sdk';
+import { FetchInput, FetchOutput, StoreInput, StoreOutput, ErrorMessage } from './types';
 
-@json
-class MissingKeyMessage {
+const myTableName = "my_storage_table";
+
+@serializable
+export class PingOutput {
     success!: boolean;
-    message!: string;
+    value!: string;
+    contextId!: string;
 }
 
-@json
-class FetchInput {
-    key!: string;
-}
-
-const myTableName = "my_table";
 
 /**
  * @query
- * @param arg - a pointer to a null-terminated c string located in linear memory
  */
-export function fetchValue(arg: i32): void {
-    const input = JSON.parse<FetchInput>(ptr2string(arg));
-    // let k = ptr2string(arg);
-    let v = Ledger.getTable(myTableName).get(input.key);
-    // let v = readLedger("my_table", input.key);
-    if (v.length == 0){
-        const toto = JSON.stringify<MissingKeyMessage>({
+export function ping(): void {
+    const contextId = Context.get('caller')
+    Notifier.sendJson<PingOutput>({
+        success: true,
+        value: 'pong',
+        contextId
+    });
+}
+
+/**
+ * @query
+ * @param {FetchInput} input - A parsed input argument
+ */
+export function fetchValue(input: FetchInput): void {
+
+    let value = Ledger.getTable(myTableName).get(input.key);
+    if (value.length === 0) {
+        Notifier.sendJson<ErrorMessage>({
             success: false,
             message: `key '${input.key}' not found in table`
-        })
-        Notifier.notify(String.UTF8.encode(toto, true));
-        // Notifier.notify(String.UTF8.encode("{\"success\": false,\"message\": \"" + "key '" + k + "' not found in table \" }", true));
-   } else
-        Notifier.notify(String.UTF8.encode("{\"success\": \"ok\",\"" + input.key + "\": \"" + v + "\" }", true));
+        });
+    } else {
+        Notifier.sendJson<FetchOutput>({
+            success: true,
+            value
+        });
+    }
 }
 
 /**
  * @transaction
- * @param arg - a pointer to a null-terminated c string located in linear memory
+ * @param {StoreInput} input - A parsed input argument
  */
-export function storeValue(arg: i32): void {
-    const s = ptr2string(arg);
-    const params = s.split('=');
-    if (params.length !== 2)
-        Notifier.notify(String.UTF8.encode("{\"success\": false, \"message\":\"Missing arguments\" }", true));
-    else {
-        Ledger.getTable("my_table").set(params[0], params[1]);
-        // writeLedger("my_table", params[0], params[1]);
-        Notifier.notify(String.UTF8.encode("{\"success\": true }", true));
+export function storeValue(input: StoreInput): void {
+
+    if (input.key && input.value) {
+        Ledger.getTable(myTableName).set(input.key, input.value);
+        Notifier.sendJson<StoreOutput>({
+            success: true
+        });
+        return;
     }
+
+    Notifier.sendJson<ErrorMessage>({
+        success: false,
+        message: `Missing value arguments`
+    });
 }
