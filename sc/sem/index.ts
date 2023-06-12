@@ -1,7 +1,7 @@
 import { Notifier, Ledger, Context, JSON } from '@klave/sdk';
-import { GetParticipantsOutput, Participant, VoteInput, VoteOutput, ResultInsufficientOutput, ResultOutput, HelloOutput, PingOutput, ErrorMessage } from './types';
+import { GetParticipantsOutput, Participant, ParticipantInfo, VoteInput, VoteOutput, OwnContribOutput, ResultInsufficientOutput, ResultOutput, HelloOutput, PingOutput, ErrorMessage } from './types';
 
-const participantsTableName = "participants_v0";
+const participantsTableName = "participants_v3";
 const noShowContribution = -999
 
 /**
@@ -19,11 +19,13 @@ export function getParticipants(): void {
 
     const participants = JSON.parse<Participant[]>(list);
     Notifier.sendJson<GetParticipantsOutput>({
-        participants: participants.map(p => ({
-            id: p.id,
-            name: p.name,
-            hasContributed: p.contribution !== noShowContribution
-        }))
+        participants: participants.map<ParticipantInfo>(function (p) {
+            return {
+                id: p.id,
+                name: p.name,
+                hasContributed: p.contribution !== noShowContribution
+            }
+        })
     });
 }
 
@@ -36,25 +38,66 @@ export function getResult(): void {
     if (list.length === 0) {
         Notifier.sendJson<ResultInsufficientOutput>({
             success: false,
-            message: 'Insufficient number of contributions'
+            message: 'Nombre de contributions insuffisantes'
         });
         return;
     }
 
+    // Notifier.sendJson<ResultOutput>({
+    //     success: true,
+    //     average: 42
+    // });
+
     const participants = JSON.parse<Participant[]>(list);
-    const contributingParticipants = participants.filter(p => p.contribution !== noShowContribution)
+    const contributingParticipants = participants.filter(function (p) { return p.contribution !== noShowContribution })
     if (contributingParticipants.length < 3) {
         Notifier.sendJson<ResultInsufficientOutput>({
             success: false,
-            message: 'Insufficient number of contributions'
+            message: 'Nombre de contributions insuffisantes'
         });
         return;
     }
 
-    const avg = participants.reduce((acc, p) => acc + p.contribution, 0) / participants.length;
+    const avg = participants.reduce(function (acc: f64, p) { return acc + <f64>p.contribution }, <f64>0) / participants.length;
     Notifier.sendJson<ResultOutput>({
         success: true,
         average: avg
+    });
+}
+
+/**
+ * @query
+ */
+export function getOwnContribution(): void {
+
+    const participantsTable = Ledger.getTable(participantsTableName)
+
+    const list = participantsTable.get('list');
+    if (list.length === 0) {
+        Notifier.sendJson<ErrorMessage>({
+            success: false,
+            message: `Un problème est survenu lors de la requête`
+        });
+        return;
+    }
+
+    const existingParticipants = JSON.parse<Participant[]>(list);
+    const which = existingParticipants.findIndex(function (p) { 
+        return p.id === Context.get('sender') 
+    });
+    if (which === -1) {
+        Notifier.sendJson<ErrorMessage>({
+            success: false,
+            message: `Un problème est survenu lors de la requête`
+        });
+        return;
+    }
+
+    const client = existingParticipants[which]
+
+    Notifier.sendJson<OwnContribOutput>({
+        success: true,
+        contribution: client.contribution
     });
 }
 
@@ -69,18 +112,19 @@ export function vote(input: VoteInput): void {
     if (list.length === 0) {
         Notifier.sendJson<ErrorMessage>({
             success: false,
-            message: `There was an issue processing your request`
+            message: `Un problème est survenu lors de la requête`
         });
         return;
     }
 
     const existingParticipants = JSON.parse<Participant[]>(list);
-    const which = existingParticipants.findIndex(p => p.id === Context.get('sender'));
+    const which = existingParticipants.findIndex(function (p) { return p.id === Context.get('sender') });
     if (which === -1) {
         Notifier.sendJson<ErrorMessage>({
             success: false,
-            message: `There was an issue processing your request`
+            message: `Un problème est survenu lors de la requête`
         });
+        return;
     }
 
     existingParticipants[which].contribution = input.contribution;
@@ -99,7 +143,7 @@ export function hello(): void {
     const clientId = Context.get('sender');
     const newParticipant: Participant = {
         id: clientId,
-        name: 'Anonymous',
+        name: 'Anonyme',
         visible: false,
         contribution: noShowContribution
     }
@@ -111,14 +155,18 @@ export function hello(): void {
         participantsTable.set('list', JSON.stringify<Participant[]>([newParticipant]));
     } else {
         const existingParticipants = JSON.parse<Participant[]>(list);
-        if (existingParticipants.findIndex(p => p.id === clientId) === -1) {
+        if (existingParticipants.findIndex(function (p) { 
+            const clientId = Context.get('sender')
+            return p.id === clientId 
+        }) === -1) {
             existingParticipants.push(newParticipant);
-            participantsTable.set('list', JSON.stringify<Participant[]>([newParticipant]));
+            participantsTable.set('list', JSON.stringify<Participant[]>(existingParticipants));
         }
     }
 
     Notifier.sendJson<HelloOutput>({
-        success: true
+        success: true,
+        clientId
     });
 }
 

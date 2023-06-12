@@ -43,8 +43,15 @@ export class ResultOutput {
 }
 
 @serializable
+export class OwnContribOutput {
+    success!: boolean;
+    contribution!: number;
+}
+
+@serializable
 export class HelloOutput {
     success!: boolean;
+    clientId!: string;
 }
 
 @serializable

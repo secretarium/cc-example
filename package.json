@@ -9,9 +9,10 @@
     "build": "stac ."
   },
   "devDependencies": {
-    "@klave/sdk": "0.4.5",
+    "@klave/sdk": "dev",
     "assemblyscript": "^0.27.5",
-    "json-as": "0.5.36",
-    "visitor-as": "0.11.4"
+    "json-as": "0.5.23",
+    "visitor-as": "0.11.4",
+    "typescript": "5.0.4"
   }
 }
