@@ -1,29 +1,60 @@
 import { JSON } from '@klave/sdk';
 
 @serializable
-export class ErrorMessage {
+export class Participant {
+    id!: string;
+    name!: string;
+    visible!: boolean;
+    contribution!: number;
+}
+
+@serializable
+export class ParticipantInfo {
+    id!: string;
+    name!: string;
+    hasContributed!: boolean;
+}
+
+@serializable
+export class GetParticipantsOutput {
+    participants!: ParticipantInfo[];
+}
+
+@serializable
+export class VoteInput {
+    contribution!: number;
+}
+
+@serializable
+export class VoteOutput {
+    success!: boolean;
+}
+
+@serializable
+export class ResultInsufficientOutput {
     success!: boolean;
     message!: string;
 }
 
 @serializable
-export class FetchInput {
-    key!: string;
-}
-
-@serializable
-export class FetchOutput {
+export class ResultOutput {
     success!: boolean;
-    value!: string;
+    average!: number;
 }
 
 @serializable
-export class StoreInput {
-    key!: string;
-    value!: string;
-}
-
-@serializable
-export class StoreOutput {
+export class HelloOutput {
     success!: boolean;
+}
+
+@serializable
+export class PingOutput {
+    pong!: boolean;
+    you!: string;
+}
+
+@serializable
+export class ErrorMessage {
+    success!: boolean;
+    message!: string;
 }
