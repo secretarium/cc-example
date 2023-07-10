@@ -1,5 +1,6 @@
-import { COMPARATOR } from "util/sort"; 
-import { CascadeParams, ImageInfo } from "./types";
+import { COMPARATOR } from "util/sort";
+import { CascadeParams, CascadeProgressOutput, ImageInfo } from "./types";
+import { Notifier } from "@klave/sdk";
 
 let tdepth = 0;
 let ntrees = 0;
@@ -7,7 +8,7 @@ let tcodes = new Int8Array(0);
 let tpreds = new Float32Array(0);
 let thresh = new Float32Array(0);
 
-export function unpackCascade(bytes: Uint8Array): void {
+export function unpackCascade(bytes: Int8Array): void {
     //
     const dview = new DataView(new ArrayBuffer(4));
     /*
@@ -18,21 +19,27 @@ export function unpackCascade(bytes: Uint8Array): void {
     /*
         read the depth (size) of each tree first: a 32-bit signed integer
     */
-    dview.setUint8(0, bytes[p + 0]), dview.setUint8(1, bytes[p + 1]), dview.setUint8(2, bytes[p + 2]), dview.setUint8(3, bytes[p + 3]);
+    dview.setUint8(0, bytes[p + 0]);
+    dview.setUint8(1, bytes[p + 1]);
+    dview.setUint8(2, bytes[p + 2]);
+    dview.setUint8(3, bytes[p + 3]);
     tdepth = dview.getInt32(0, true);
     p = p + 4
     /*
         next, read the number of trees in the cascade: another 32-bit signed integer
     */
-    dview.setUint8(0, bytes[p + 0]), dview.setUint8(1, bytes[p + 1]), dview.setUint8(2, bytes[p + 2]), dview.setUint8(3, bytes[p + 3]);
+    dview.setUint8(0, bytes[p + 0]);
+    dview.setUint8(1, bytes[p + 1]);
+    dview.setUint8(2, bytes[p + 2]);
+    dview.setUint8(3, bytes[p + 3]);
     ntrees = dview.getInt32(0, true);
     p = p + 4
     /*
         read the actual trees and cascade thresholds
     */
     const tcodes_ls: u8[] = [];
-    const tpreds_ls: number[] = [];
-    const thresh_ls: number[] = [];
+    const tpreds_ls: f32[] = [];
+    const thresh_ls: f32[] = [];
 
     for (let t = 0; t < ntrees; ++t) {
 
@@ -48,12 +55,18 @@ export function unpackCascade(bytes: Uint8Array): void {
 
         // read the prediction in the leaf nodes of the tree
         for (let i = 0; i < Math.pow(2, tdepth); ++i) {
-            dview.setUint8(0, bytes[p + 0]), dview.setUint8(1, bytes[p + 1]), dview.setUint8(2, bytes[p + 2]), dview.setUint8(3, bytes[p + 3]);
+            dview.setUint8(0, bytes[p + 0]);
+            dview.setUint8(1, bytes[p + 1]);
+            dview.setUint8(2, bytes[p + 2]);
+            dview.setUint8(3, bytes[p + 3]);
             tpreds_ls.push(dview.getFloat32(0, true));
             p = p + 4;
         }
         // read the threshold
-        dview.setUint8(0, bytes[p + 0]), dview.setUint8(1, bytes[p + 1]), dview.setUint8(2, bytes[p + 2]), dview.setUint8(3, bytes[p + 3]);
+        dview.setUint8(0, bytes[p + 0]);
+        dview.setUint8(1, bytes[p + 1]);
+        dview.setUint8(2, bytes[p + 2]);
+        dview.setUint8(3, bytes[p + 3]);
         thresh_ls.push(dview.getFloat32(0, true));
 
         p = p + 4;
@@ -116,12 +129,19 @@ export function runCascade(image: ImageInfo, params: CascadeParams): f64[][] {
         const step = i32(Math.max(shiftfactor * scale, 1)) >> 0; // '>>0' transforms this number to int
         const offset = i32(scale / 2 + 1) >> 0;
 
-        for (let r = offset; r <= nrows - offset; r += step)
+        const progress = 1000 * scale / (maxsize - minsize)
+        Notifier.sendJson<CascadeProgressOutput>({
+            progress: progress > 100 ? 100 : progress
+        });
+
+        for (let r = offset; r <= nrows - offset; r += step) {
+
             for (let c = offset; c <= ncols - offset; c += step) {
                 const q = classifyRegion(r, c, scale, pixels, ldim);
                 if (q > 0.0)
                     detections.push([r, c, scale, q]);
             }
+        }
 
         scale = scale * scalefactor;
     }
