@@ -1,7 +1,7 @@
 import { Notifier, Ledger, Context, JSON } from '@klave/sdk';
 import { GetParticipantsOutput, Participant, ParticipantInfo, VoteInput, VoteOutput, OwnContribOutput, ResultInsufficientOutput, ResultOutput, HelloOutput, PingOutput, ErrorMessage } from './types';
 
-const participantsTableName = "participants_v3";
+const participantsTableName = "secret_na_participants_v0";
 const noShowContribution = -999
 
 /**
@@ -38,31 +38,31 @@ export function getResult(): void {
     if (list.length === 0) {
         Notifier.sendJson<ResultInsufficientOutput>({
             success: false,
-            message: 'Nombre de contributions insuffisantes'
+            message: 'Insufficient number of contributions'
         });
         return;
     }
 
-    // Notifier.sendJson<ResultOutput>({
-    //     success: true,
-    //     average: 42
-    // });
-
-    const participants = JSON.parse<Participant[]>(list);
-    const contributingParticipants = participants.filter(function (p) { return p.contribution !== noShowContribution })
-    if (contributingParticipants.length < 3) {
-        Notifier.sendJson<ResultInsufficientOutput>({
-            success: false,
-            message: 'Nombre de contributions insuffisantes'
-        });
-        return;
-    }
-
-    const avg = participants.reduce(function (acc: f64, p) { return acc + <f64>p.contribution }, <f64>0) / participants.length;
     Notifier.sendJson<ResultOutput>({
         success: true,
-        average: avg
+        average: 42
     });
+
+    // const participants = JSON.parse<Participant[]>(list);
+    // const contributingParticipants = participants.filter(function (p) { return p.contribution !== noShowContribution })
+    // if (contributingParticipants.length < 3) {
+    //     Notifier.sendJson<ResultInsufficientOutput>({
+    //         success: false,
+    //         message: 'Insufficient number of contributions'
+    //     });
+    //     return;
+    // }
+
+    // const avg = participants.reduce(function (acc: f64, p) { return acc + <f64>p.contribution }, <f64>0) / participants.length;
+    // Notifier.sendJson<ResultOutput>({
+    //     success: true,
+    //     average: avg
+    // });
 }
 
 /**
@@ -76,7 +76,7 @@ export function getOwnContribution(): void {
     if (list.length === 0) {
         Notifier.sendJson<ErrorMessage>({
             success: false,
-            message: `Un problème est survenu lors de la requête`
+            message: `There was an issue processing your request`
         });
         return;
     }
@@ -88,7 +88,7 @@ export function getOwnContribution(): void {
     if (which === -1) {
         Notifier.sendJson<ErrorMessage>({
             success: false,
-            message: `Un problème est survenu lors de la requête`
+            message: `There was an issue processing your request`
         });
         return;
     }
@@ -112,7 +112,7 @@ export function vote(input: VoteInput): void {
     if (list.length === 0) {
         Notifier.sendJson<ErrorMessage>({
             success: false,
-            message: `Un problème est survenu lors de la requête`
+            message: `There was an issue processing your request`
         });
         return;
     }
@@ -122,7 +122,7 @@ export function vote(input: VoteInput): void {
     if (which === -1) {
         Notifier.sendJson<ErrorMessage>({
             success: false,
-            message: `Un problème est survenu lors de la requête`
+            message: `There was an issue processing your request`
         });
         return;
     }
@@ -143,7 +143,7 @@ export function hello(): void {
     const clientId = Context.get('sender');
     const newParticipant: Participant = {
         id: clientId,
-        name: 'Anonyme',
+        name: 'Anonymous',
         visible: false,
         contribution: noShowContribution
     }
