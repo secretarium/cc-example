@@ -3,7 +3,7 @@ import { decode } from "as-base64/assembly/index";
 import { GetParticipantsOutput, Participant, ParticipantInfo, ResultOutput, HelloOutput, PingOutput, ImageInfo, DumbResultOutput, PicoModel, ResultInsufficientOutput } from './types';
 import { unpackCascade, runCascade, clusterDetections } from './pico';
 
-const participantsTableName = "image_simd_faced_v0";
+const participantsTableName = "image_simd_faced_v1";
 const picoModelTableName = "pico_model_v0";
 const noShowContribution = 0
 
