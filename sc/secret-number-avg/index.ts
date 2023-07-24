@@ -1,7 +1,7 @@
 import { Notifier, Ledger, Context, JSON } from '@klave/sdk';
 import { GetParticipantsOutput, Participant, ParticipantInfo, VoteInput, VoteOutput, OwnContribOutput, ResultInsufficientOutput, ResultOutput, HelloOutput, PingOutput, ErrorMessage } from './types';
 
-const participantsTableName = "secret_na_participants_v2";
+const participantsTableName = "secret_na_participants_v3";
 const noShowContribution = -999
 
 /**
@@ -43,26 +43,26 @@ export function getResult(): void {
         return;
     }
 
-    // Notifier.sendJson<ResultOutput>({
-    //     success: true,
-    //     average: 42
-    // });
-
-    const participants = JSON.parse<Participant[]>(list);
-    const contributingParticipants = participants.filter(function (p) { return p.contribution !== noShowContribution })
-    if (contributingParticipants.length < 3) {
-        Notifier.sendJson<ResultInsufficientOutput>({
-            success: false,
-            message: 'Insufficient number of contributions'
-        });
-        return;
-    }
-
-    const avg = participants.reduce(function (acc: f64, p) { return acc + <f64>p.contribution }, <f64>0) / participants.length + 100;
     Notifier.sendJson<ResultOutput>({
         success: true,
-        average: avg
+        average: 42
     });
+
+    // const participants = JSON.parse<Participant[]>(list);
+    // const contributingParticipants = participants.filter(function (p) { return p.contribution !== noShowContribution })
+    // if (contributingParticipants.length < 3) {
+    //     Notifier.sendJson<ResultInsufficientOutput>({
+    //         success: false,
+    //         message: 'Insufficient number of contributions'
+    //     });
+    //     return;
+    // }
+
+    // const avg = participants.reduce(function (acc: f64, p) { return acc + <f64>p.contribution }, <f64>0) / participants.length + 100;
+    // Notifier.sendJson<ResultOutput>({
+    //     success: true,
+    //     average: avg
+    // });
 }
 
 /**
