@@ -5,11 +5,13 @@
     "applications": [
         {
             "name": "Secret Mixing NumAvg",
+            "description": "Secret Mixing NumAvg",
             "version": "0.0.4",
             "rootDir": "/sc/secret-number-avg"
         },
         {
             "name": "Image Simd Faced",
+            "description": "Image Simd Faced",
             "version": "0.0.0",
             "rootDir": "/sc/image-simd-faced"
         }
