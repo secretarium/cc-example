@@ -7,7 +7,6 @@ const participantsTableName = "image_simd_faced_v1";
 const picoModelTableName = "pico_model_v0";
 const noShowContribution = 0
 
-
 /**
  * @transaction
  */
@@ -56,7 +55,6 @@ export function getPicoResult(input: ImageInfo): void {
     })
 
     const detsFromClustering = clusterDetections(detsFromCascade, 0.2);
-
     const participantsTable = Ledger.getTable(participantsTableName)
     const list = participantsTable.get('list');
 

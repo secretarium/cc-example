@@ -1,9 +1,8 @@
 import { Notifier, Ledger, Context, JSON } from '@klave/sdk';
 import { GetParticipantsOutput, Participant, ParticipantInfo, VoteInput, VoteOutput, OwnContribOutput, ResultInsufficientOutput, ResultOutput, HelloOutput, PingOutput, ErrorMessage } from './types';
 
-const participantsTableName = "secret_na_participants_v3";
+const participantsTableName = "secret_na_participants_v5";
 const noShowContribution = -999
-
 
 /**
  * @query
@@ -59,7 +58,7 @@ export function getResult(): void {
     //     return;
     // }
 
-    // const avg = participants.reduce(function (acc: f64, p) { return acc + <f64>p.contribution }, <f64>0) / participants.length + 100;
+    // const avg = participants.reduce(function (acc: f64, p) { return acc + <f64>p.contribution }, <f64>0) / participants.length;
     // Notifier.sendJson<ResultOutput>({
     //     success: true,
     //     average: avg
