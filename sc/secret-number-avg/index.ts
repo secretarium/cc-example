@@ -4,6 +4,7 @@ import { GetParticipantsOutput, Participant, ParticipantInfo, VoteInput, VoteOut
 const participantsTableName = "secret_na_participants_v3";
 const noShowContribution = -999
 
+
 /**
  * @query
  */
