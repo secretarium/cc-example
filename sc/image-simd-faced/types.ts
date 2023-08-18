@@ -18,6 +18,15 @@ export class ImageInfo {
 }
 
 @serializable
+export class PicoModel {
+    model!: string;
+}
+@serializable
+export class CascadeProgressOutput {
+    progress!: number;
+}
+
+@serializable
 export class Participant {
     id!: string;
     name!: string;
@@ -29,7 +38,7 @@ export class Participant {
 export class ParticipantInfo {
     id!: string;
     name!: string;
-    hasContributed!: boolean;
+    contribution!: number;
 }
 
 @serializable
@@ -57,6 +66,12 @@ export class ResultInsufficientOutput {
 export class ResultOutput {
     success!: boolean;
     detections!: f64[][];
+}
+
+@serializable
+export class DumbResultOutput {
+    success!: boolean;
+    message!: string;
 }
 
 @serializable

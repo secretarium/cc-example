@@ -1,7 +1,7 @@
 import { Notifier, Ledger, Context, JSON } from '@klave/sdk';
 import { GetParticipantsOutput, Participant, ParticipantInfo, VoteInput, VoteOutput, OwnContribOutput, ResultInsufficientOutput, ResultOutput, HelloOutput, PingOutput, ErrorMessage } from './types';
 
-const participantsTableName = "secret_na_participants_v0";
+const participantsTableName = "secret_na_participants_v5";
 const noShowContribution = -999
 
 /**
