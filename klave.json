@@ -1,25 +1,17 @@
 {
     "version": "1",
-    "name": "Testing Repository",
+    "name": "Demo Repository",
     "branch": "*",
-    "targetSdk": "1.0",
     "applications": [
         {
-            "name": "HOC Stress",
-            "version": "0.0.3",
-            "targetSdk": "1.1",
-            "rootDir": "/sc/sem"
+            "name": "Secret Mixing NumAvg",
+            "version": "0.0.4",
+            "rootDir": "/sc/secret-number-avg"
         },
         {
-            "name": "Vickrey Auction",
-            "version": "0.0.1",
-            "rootDir": "lib",
-            "index": "vickrey.ssc.ts"
-        },
-        {
-            "name": "AI BLAST Alignement",
-            "version": "0.1.0",
-            "branch": "master"
+            "name": "Image Simd Faced",
+            "version": "0.0.0",
+            "rootDir": "/sc/image-simd-faced"
         }
     ]
 }
