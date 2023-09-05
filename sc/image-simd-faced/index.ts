@@ -63,18 +63,7 @@ export function getPicoResult(input: ImageInfo): void {
         const which = existingParticipants.findIndex(function (p) { return p.id === Context.get('sender') });
         
         if (which !== -1) {
-
             existingParticipants[which].contribution = detsFromClustering.length;
-
-            Notifier.sendJson<DumbResultOutput>({
-                success: true,
-                message: 'PLOP which SIZE:... ' + existingParticipants[which].id
-            });
-            Notifier.sendJson<DumbResultOutput>({
-                success: true,
-                message: 'PLOP which SIZE:... ' + JSON.stringify<Participant[]>(existingParticipants)
-            });
-
             participantsTable.set('list', JSON.stringify<Participant[]>(existingParticipants));
         }
     }
@@ -83,7 +72,6 @@ export function getPicoResult(input: ImageInfo): void {
         success: true,
         detections: detsFromClustering
     });
-
 }
 
 /**
@@ -96,7 +84,7 @@ export function setPicoModel(input: PicoModel): void {
 
     Notifier.sendJson<DumbResultOutput>({
         success: true,
-        message: "setPicoModel done"
+        message: "Model loaded"
     });
 }
 

@@ -1,5 +1,5 @@
-import { Notifier, Ledger, Context, JSON } from '@klave/sdk';
-import { GetParticipantsOutput, Participant, ParticipantInfo, VoteInput, VoteOutput, OwnContribOutput, ResultInsufficientOutput, ResultOutput, HelloOutput, PingOutput, ErrorMessage } from './types';
+import { Notifier, Ledger, Context, JSON, HTTP, HttpRequest, HttpResponse } from '@klave/sdk';
+import { GetParticipantsOutput, Participant, ParticipantInfo, VoteInput, VoteOutput, OwnContribOutput, ResultInsufficientOutput, ResultOutput, HelloOutput, PingOutput, ErrorMessage, HttpResultMessage } from './types';
 
 const participantsTableName = "secret_na_participants_v5";
 const noShowContribution = -999
@@ -82,8 +82,8 @@ export function getOwnContribution(): void {
     }
 
     const existingParticipants = JSON.parse<Participant[]>(list);
-    const which = existingParticipants.findIndex(function (p) { 
-        return p.id === Context.get('sender') 
+    const which = existingParticipants.findIndex(function (p) {
+        return p.id === Context.get('sender')
     });
     if (which === -1) {
         Notifier.sendJson<ErrorMessage>({
@@ -155,9 +155,9 @@ export function hello(): void {
         participantsTable.set('list', JSON.stringify<Participant[]>([newParticipant]));
     } else {
         const existingParticipants = JSON.parse<Participant[]>(list);
-        if (existingParticipants.findIndex(function (p) { 
+        if (existingParticipants.findIndex(function (p) {
             const clientId = Context.get('sender')
-            return p.id === clientId 
+            return p.id === clientId
         }) === -1) {
             existingParticipants.push(newParticipant);
             participantsTable.set('list', JSON.stringify<Participant[]>(existingParticipants));
@@ -180,3 +180,98 @@ export function ping(): void {
         you: clientId
     });
 }
+
+/**
+ * @query
+ */
+export function httpsRequest(url: string): void {
+    const scheme = 'https://';
+    if (!url.startsWith(scheme)) {
+        Notifier.sendJson<ErrorMessage>({
+            success: false,
+            message: `only https queries are supported, ${url} doesn't start with 'https://'`
+        });
+        return;
+    }
+    const hostAndPath = url.substring(scheme.length);
+    let pos = hostAndPath.indexOf('/');
+    const hostAndPort = pos == -1 ? hostAndPath : hostAndPath.substring(0, pos);
+    const path = pos == -1 ? '' : hostAndPath.substring(pos);
+    pos = hostAndPort.indexOf(':');
+    const host = pos == -1 ? hostAndPort : hostAndPort.substring(0, pos);
+    const port = pos == -1 ? 443 : parseInt(hostAndPort.substring(pos + 1)) as i32;
+    const query: HttpRequest = {
+        hostname: host,
+        port,
+        path,
+        headers: [],
+        body: '',
+    };
+
+    const respBuff = HTTP.requestAsArrayBuffer(query);
+    if (respBuff === null) {
+        Notifier.sendJson<ErrorMessage>({
+            success: false,
+            message: `HTTP call went wrong !`
+        });
+        return;
+    }
+    const compRes = String.UTF8.decode(respBuff, true)
+    Notifier.sendJson<ErrorMessage>({
+        success: true,
+        message: compRes
+    }); 
+
+    const response = JSON.parse<HttpResponse>(compRes)
+    if (!response)
+        Notifier.sendJson<ErrorMessage>({
+            success: false,
+            message: `HTTP call went wrong !`
+        });
+    else {
+        Notifier.sendJson<HttpResultMessage>({
+            success: true,
+            response
+        });
+    }
+};
+
+/**
+ * @query
+ */
+export function https(url: string): void {
+    const scheme = 'https://';
+    if (!url.startsWith(scheme)) {
+        Notifier.sendJson<ErrorMessage>({
+            success: false,
+            message: `only https queries are supported, ${url} doesn't start with 'https://'`
+        });
+        return;
+    }
+    const hostAndPath = url.substring(scheme.length);
+    let pos = hostAndPath.indexOf('/');
+    const hostAndPort = pos == -1 ? hostAndPath : hostAndPath.substring(0, pos);
+    const path = pos == -1 ? '' : hostAndPath.substring(pos);
+    pos = hostAndPort.indexOf(':');
+    const host = pos == -1 ? hostAndPort : hostAndPort.substring(0, pos);
+    const port = pos == -1 ? 443 : parseInt(hostAndPort.substring(pos + 1)) as i32;
+    const query: HttpRequest = {
+        hostname: host,
+        port,
+        path,
+        headers: [],
+        body: '',
+    };
+    const response = HTTP.request(query);
+    if (!response)
+        Notifier.sendJson<ErrorMessage>({
+            success: false,
+            message: `HTTP call went wrong !`
+        });
+    else {
+        Notifier.sendJson<HttpResultMessage>({
+            success: true,
+            response
+        });
+    }
+};

@@ -1,4 +1,4 @@
-import { JSON } from '@klave/sdk';
+import { JSON, HttpResponse } from '@klave/sdk';
 
 @serializable
 export class Participant {
@@ -65,3 +65,10 @@ export class ErrorMessage {
     success!: boolean;
     message!: string;
 }
+
+@serializable
+export class HttpResultMessage {
+    success!: boolean;
+    response!: HttpResponse;
+}
+
