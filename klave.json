@@ -14,6 +14,12 @@
             "description": "Image Simd Faced",
             "version": "0.0.0",
             "rootDir": "/sc/image-simd-faced"
+        },
+        {
+            "name": "FX Fetch",
+            "description": "FX Fetch Queries",
+            "version": "0.0.0",
+            "rootDir": "/sc/fx-fetch"
         }
     ]
 }
