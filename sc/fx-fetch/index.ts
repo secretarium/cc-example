@@ -23,11 +23,6 @@ export function grabFxRates(): void {
         return;
     }
 
-    Notifier.sendJson<ErrorMessage>({
-        success: true,
-        message: response.body
-    });
-
     const ratesData = JSON.parse<FxRateData>(response.body);
     Notifier.sendJson<FxRateResult>({
         success: true,
