@@ -7,9 +7,16 @@ export class ErrorMessage {
 }
 
 @serializable
+export class FxRateDataResult {
+    EUR!: number;
+    USD!: number;
+    CHF!: number;
+}
+
+@serializable
 export class FxRateData {
     base!: string;
-    results!: Map<string, number>;
+    results!: FxRateDataResult;
     updated!: string;
 }
 
