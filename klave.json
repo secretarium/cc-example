@@ -20,6 +20,12 @@
             "description": "FX Fetch Queries",
             "version": "0.0.0",
             "rootDir": "/sc/fx-fetch"
+        },
+        {
+            "name": "Sub Ping",
+            "description": "Sub Ping",
+            "version": "0.0.0",
+            "rootDir": "/sc/change-sub"
         }
     ]
 }
