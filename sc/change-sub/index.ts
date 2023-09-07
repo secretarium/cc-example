@@ -13,6 +13,7 @@ export function readValue(): void {
         success: true,
         message: text
     });
+    
 };
 
 /**
