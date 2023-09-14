@@ -26,6 +26,12 @@
             "description": "Sub Ping",
             "version": "0.0.0",
             "rootDir": "/sc/change-sub"
+        },
+        {
+            "name": "Chat Room",
+            "description": "Chat Room",
+            "version": "0.0.0",
+            "rootDir": "/sc/chat-room"
         }
     ]
 }

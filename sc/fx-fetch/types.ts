@@ -6,13 +6,15 @@ export class ErrorMessage {
     message!: string;
 }
 
+// @ts-ignore
 @serializable
 export class FxRateDataResult {
     EUR!: number;
-    USD!: number;
+    GBP!: number;
     CHF!: number;
 }
 
+// @ts-ignore
 @serializable
 export class FxRateData {
     base!: string;
@@ -20,6 +22,7 @@ export class FxRateData {
     updated!: string;
 }
 
+// @ts-ignore
 @serializable
 export class FxRateResult {
     success!: boolean;
