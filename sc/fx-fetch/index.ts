@@ -28,4 +28,8 @@ export function grabFxRates(): void {
         success: true,
         rates: ratesData
     });
+    Notifier.sendJson<FxRateResult>({
+        success: true,
+        rates: ratesData
+    });
 };
