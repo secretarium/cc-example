@@ -25,7 +25,7 @@ export function grabFxRates(): void {
 
     const ratesData = JSON.parse<FxRateData>(response.body);
     Notifier.sendJson<FxRateResult>({
-        success: false,
+        success: true,
         rates: ratesData
     });
 };
