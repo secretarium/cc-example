@@ -12,25 +12,25 @@
         {
             "name": "Image Simd Faced",
             "description": "Image Simd Faced",
-            "version": "0.0.0",
+            "version": "0.0.1",
             "rootDir": "/sc/image-simd-faced"
         },
         {
             "name": "FX Fetch",
             "description": "FX Fetch Queries",
-            "version": "0.0.0",
+            "version": "0.0.1",
             "rootDir": "/sc/fx-fetch"
         },
         {
             "name": "Sub Ping",
             "description": "Sub Ping",
-            "version": "0.0.0",
+            "version": "0.0.1",
             "rootDir": "/sc/change-sub"
         },
         {
             "name": "Chat Room",
             "description": "Chat Room",
-            "version": "0.0.0",
+            "version": "0.0.1",
             "rootDir": "/sc/chat-room"
         }
     ]
