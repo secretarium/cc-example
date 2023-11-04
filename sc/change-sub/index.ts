@@ -25,6 +25,6 @@ export function setValue(input: KVInput): void {
 
     Notifier.sendJson<ErrorMessage>({
         success: true,
-        message: 'Done'
+        message: 'Done !!'
     });
 };

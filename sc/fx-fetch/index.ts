@@ -1,4 +1,4 @@
-import { Notifier, JSON, HTTP, HttpRequest } from '@klave/sdk';
+import { Notifier, JSON, HTTP, HttpRequest, Crypto } from '@klave/sdk';
 import { ErrorMessage, FxRateData, FxRateResult } from './types';
 
 /**
@@ -18,7 +18,7 @@ export function grabFxRates(): void {
     if (!response) {
         Notifier.sendJson<ErrorMessage>({
             success: false,
-            message: `HTTP call went wrong !`
+            message: `HTTP call went wrong`
         });
         return;
     }
@@ -27,5 +27,26 @@ export function grabFxRates(): void {
     Notifier.sendJson<FxRateResult>({
         success: true,
         rates: ratesData
+    });
+};
+
+// @ts-ignore
+@serializable
+export class DigestResult {
+    success!: boolean;
+    original!: string;
+    digest!: u8[];
+}
+
+
+/**
+ * @query
+ */
+export function getDigest(input: string): void {
+
+    Notifier.sendJson<DigestResult>({
+        success: true,
+        original: input,
+        digest: Crypto.SHA.digest(input)
     });
 };

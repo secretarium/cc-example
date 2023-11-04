@@ -45,7 +45,7 @@ export function getResult(): void {
 
     Notifier.sendJson<ResultOutput>({
         success: true,
-        average: 1337
+        average: 117964205
     });
 
     // const participants = JSON.parse<Participant[]>(list);

@@ -9,11 +9,14 @@
     "build": "stac ."
   },
   "devDependencies": {
-    "@klave/sdk": "0.8.1",
+    "@klave/sdk": "0.8.2",
     "as-base64": "0.2.0",
-    "assemblyscript": "^0.27.9",
+    "assemblyscript": "^0.27.22",
     "path-complete-extname": "^1.0.0",
-    "typescript": "5.2.2",
+    "typescript": "5.3.3",
     "visitor-as": "0.11.4"
+  },
+  "dependencies": {
+    "tslib": "^2.6.2"
   }
 }
